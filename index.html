@@ -1,0 +1,597 @@
+
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maison Douce Pâtisserie</title>
+<style>
+:root {
+  --brown: #38231e;
+  --dark: #241713;
+  --cream: #fffaf2;
+  --gold: #bd9860;
+  --muted: #806d61;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  background: var(--cream);
+  color: var(--brown);
+}
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+header {
+  background: var(--dark);
+  color: var(--cream);
+  padding: 18px 6%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.brand { font-size: 23px; letter-spacing: 1px; }
+.brand small {
+  display: block;
+  color: var(--gold);
+  font: 10px Arial, sans-serif;
+  letter-spacing: 4px;
+  margin-top: 5px;
+}
+.nav { display: flex; align-items: center; gap: 18px; }
+.nav a, .nav button {
+  color: var(--cream);
+  text-decoration: none;
+  background: none;
+  border: 0;
+  font-size: 14px;
+}
+.cart-button {
+  border: 1px solid var(--gold) !important;
+  padding: 10px 14px;
+  border-radius: 4px;
+}
+.hero {
+  min-height: 460px;
+  padding: 65px 8%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 35px;
+  background: #eee0ce;
+}
+.eyebrow {
+  color: #9b7548;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font: 11px Arial, sans-serif;
+}
+h1 { font-size: clamp(38px, 5vw, 62px); line-height: 1.08; margin: 18px 0; }
+.hero p { color: var(--muted); line-height: 1.8; max-width: 420px; }
+.btn {
+  display: inline-block;
+  border: 0;
+  background: var(--brown);
+  color: white;
+  padding: 14px 22px;
+  margin-top: 15px;
+  text-decoration: none;
+  border-radius: 3px;
+}
+.hero img {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 48% 48% 4px 4px;
+}
+section { padding: 65px 7%; }
+.section-heading { text-align: center; margin-bottom: 35px; }
+.section-heading h2 { font-size: 36px; margin: 10px 0; }
+.section-heading p { color: var(--muted); }
+.products {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 25px;
+}
+.product {
+  background: white;
+  padding-bottom: 20px;
+  border: 1px solid #eee4d8;
+}
+.product img { width: 100%; height: 220px; object-fit: cover; }
+.product-info { padding: 0 18px; }
+.product h3 { font-size: 22px; margin: 16px 0 8px; }
+.product p { color: var(--muted); font: 14px/1.6 Arial, sans-serif; min-height: 44px; }
+.product-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.price { font-size: 19px; font-weight: bold; }
+.add-btn {
+  background: var(--brown);
+  color: white;
+  border: 0;
+  border-radius: 3px;
+  padding: 10px 12px;
+}
+.add-btn:hover, .btn:hover { background: #69473a; }
+.about {
+  background: #eee0ce;
+  text-align: center;
+  line-height: 1.8;
+}
+.about p { max-width: 650px; margin: auto; color: var(--muted); }
+footer {
+  background: var(--dark);
+  color: var(--cream);
+  padding: 35px 7%;
+  text-align: center;
+  line-height: 1.8;
+}
+footer a { color: var(--gold); }
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: #1a100dcc;
+  padding: 18px;
+  overflow-y: auto;
+  align-items: center;
+  justify-content: center;
+}
+.modal.open { display: flex; }
+.modal-box {
+  background: var(--cream);
+  width: min(560px, 100%);
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 25px;
+  border-radius: 6px;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.modal-header h2 { margin: 0; }
+.close {
+  border: 0;
+  background: transparent;
+  font-size: 28px;
+  color: var(--brown);
+}
+.cart-empty { color: var(--muted); padding: 20px 0; }
+.cart-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  border-bottom: 1px solid #e7d8c7;
+  padding: 16px 0;
+}
+.cart-item small { display: block; margin-top: 6px; color: var(--muted); }
+.quantity { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.quantity button {
+  width: 28px; height: 28px;
+  border: 1px solid #d4c1ad;
+  background: white;
+  border-radius: 3px;
+}
+.remove { border: 0; background: transparent; color: #92513c; font-size: 12px; }
+.total {
+  display: flex;
+  justify-content: space-between;
+  border-top: 2px solid var(--gold);
+  padding-top: 17px;
+  font-size: 21px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+form { margin-top: 22px; }
+form h3 { margin-bottom: 12px; }
+label { display: block; font: 13px Arial, sans-serif; margin: 13px 0 6px; }
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d8c7b5;
+  border-radius: 3px;
+  background: white;
+  color: var(--brown);
+}
+textarea { resize: vertical; min-height: 75px; }
+.checkout {
+  width: 100%;
+  margin-top: 18px;
+  padding: 15px;
+  background: #426b4c;
+  color: white;
+  border: 0;
+  border-radius: 3px;
+}
+.checkout:disabled { opacity: .45; cursor: not-allowed; }
+.note { color: var(--muted); font: 12px/1.5 Arial, sans-serif; margin-top: 12px; }
+@media (max-width: 750px) {
+  header { padding: 15px 4%; flex-wrap: wrap; }
+  .brand { font-size: 19px; }
+  .nav { gap: 12px; }
+  .nav a { display: none; }
+  .hero { grid-template-columns: 1fr; padding: 45px 6%; }
+  .hero img { height: 260px; }
+  section { padding: 45px 5%; }
+  .products { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .product img { height: 160px; }
+  .product-info { padding: 0 10px; }
+  .product h3 { font-size: 18px; }
+  .product p { font-size: 12px; min-height: 60px; }
+  .product-bottom { align-items: flex-start; flex-direction: column; }
+  .add-btn { width: 100%; }
+}
+@media (max-width: 390px) {
+  .products { grid-template-columns: 1fr; }
+  .product img { height: 220px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Maison Douce<small>PÂTISSERIE</small></div>
+  <nav class="nav">
+    <a href="#home" data-ro="Acasă" data-ru="Главная">Acasă</a>
+    <a href="#catalog" data-ro="Deserturi" data-ru="Десерты">Deserturi</a>
+    <a href="#contact" data-ro="Contact" data-ru="Контакты">Contact</a>
+    <button id="langBtn" onclick="toggleLanguage()">RU</button>
+    <button class="cart-button" onclick="openCart()">🛒 <span data-ro="Coșul" data-ru="Корзина">Coșul</span> (<span id="cartCount">0</span>)</button>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div>
+      <div class="eyebrow" data-ro="Făcut cu dragoste în Chișinău" data-ru="С любовью приготовлено в Кишинёве">Făcut cu dragoste în Chișinău</div>
+      <h1 data-ro="Momente dulci, gusturi de neuitat." data-ru="Сладкие моменты, незабываемый вкус.">Momente dulci, gusturi de neuitat.</h1>
+      <p data-ro="Deserturi delicate, ingrediente alese și puțină magie în fiecare felie." data-ru="Нежные десерты, отборные ингредиенты и немного волшебства в каждом кусочке.">Deserturi delicate, ingrediente alese și puțină magie în fiecare felie.</p>
+      <a class="btn" href="#catalog" data-ro="Descoperă deserturile" data-ru="Выбрать десерт">Descoperă deserturile</a>
+    </div>
+    <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=900&q=85" alt="Tort elegant">
+  </section>
+
+  <section id="catalog">
+    <div class="section-heading">
+      <div class="eyebrow" data-ro="Colecția noastră" data-ru="Наша коллекция">Colecția noastră</div>
+      <h2 data-ro="Deserturi speciale" data-ru="Особенные десерты">Deserturi speciale</h2>
+      <p data-ro="Alege ceva delicios pentru tine sau pentru cei dragi." data-ru="Выбери что-нибудь вкусное для себя или близких.">Alege ceva delicios pentru tine sau pentru cei dragi.</p>
+    </div>
+    <div class="products" id="products"></div>
+  </section>
+
+  <section class="about">
+    <div class="eyebrow" data-ro="Povestea noastră" data-ru="Наша история">Povestea noastră</div>
+    <h2 data-ro="Copt cu grijă, servit cu dragoste." data-ru="С заботой приготовлено, с любовью подано.">Copt cu grijă, servit cu dragoste.</h2>
+    <p data-ro="La Maison Douce, credem că cele mai frumoase amintiri încep cu ceva dulce. Fiecare desert este pregătit cu atenție pentru momentele tale speciale." data-ru="В Maison Douce мы верим, что самые тёплые воспоминания начинаются с чего-то сладкого. Каждый десерт готовится с заботой для твоих особенных моментов.">La Maison Douce, credem că cele mai frumoase amintiri încep cu ceva dulce. Fiecare desert este pregătit cu atenție pentru momentele tale speciale.</p>
+  </section>
+
+  <section id="contact">
+    <div class="section-heading">
+      <div class="eyebrow" data-ro="Te așteptăm" data-ru="Мы на связи">Te așteptăm</div>
+      <h2 data-ro="Contactează-ne" data-ru="Свяжись с нами">Contactează-ne</h2>
+      <p data-ro="Chișinău · Livrare și ridicare la comandă" data-ru="Кишинёв · Доставка и самовывоз по заказу">Chișinău · Livrare și ridicare la comandă</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="brand">Maison Douce</div>
+  <p data-ro="Deserturi create cu dragoste în Chișinău." data-ru="Десерты, созданные с любовью в Кишинёве.">Deserturi create cu dragoste în Chișinău.</p>
+  <p>WhatsApp: <a id="contactLink" href="#contact">Configurează numărul mai jos în cod</a></p>
+  <small>© <span id="year"></span> Maison Douce Pâtisserie</small>
+</footer>
+
+<div class="modal" id="cartModal" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 id="cartTitle" data-ro="Coșul tău" data-ru="Твоя корзина">Coșul tău</h2>
+      <button class="close" onclick="closeCart()" aria-label="Close">×</button>
+    </div>
+    <div id="cartItems"></div>
+    <div class="total">
+      <span data-ro="Total" data-ru="Итого">Total</span>
+      <span id="cartTotal">0 MDL</span>
+    </div>
+
+    <form id="orderForm">
+      <h3 data-ro="Date pentru comandă" data-ru="Данные для заказа">Date pentru comandă</h3>
+      <label for="customerName" data-ro="Numele tău *" data-ru="Твоё имя *">Numele tău *</label>
+      <input id="customerName" name="name" required autocomplete="name" maxlength="80">
+
+      <label for="customerPhone" data-ro="Număr de telefon *" data-ru="Номер телефона *">Număr de telefon *</label>
+      <input id="customerPhone" name="phone" required type="tel" autocomplete="tel" maxlength="30" placeholder="+373...">
+
+      <label for="delivery" data-ro="Metoda de primire" data-ru="Способ получения">Metoda de primire</label>
+      <select id="delivery" name="delivery">
+        <option value="Livrare" data-ro="Livrare" data-ru="Доставка">Livrare</option>
+        <option value="Ridicare personală" data-ro="Ridicare personală" data-ru="Самовывоз">Ridicare personală</option>
+      </select>
+
+      <div id="addressField">
+        <label for="address" data-ro="Adresa de livrare *" data-ru="Адрес доставки *">Adresa de livrare *</label>
+        <input id="address" name="address" maxlength="200">
+      </div>
+
+      <label for="comment" data-ro="Comentariu (opțional)" data-ru="Комментарий (необязательно)">Comentariu (opțional)</label>
+      <textarea id="comment" name="comment" maxlength="500" placeholder="..."></textarea>
+
+      <button class="checkout" id="checkoutBtn" type="submit" data-ro="Trimite comanda prin WhatsApp" data-ru="Отправить заказ через WhatsApp">Trimite comanda prin WhatsApp</button>
+      <p class="note" data-ro="Comanda va fi pregătită ca mesaj WhatsApp. Va trebui să apeși „Trimite” în WhatsApp pentru a o expedia." data-ru="Заказ будет сформирован как сообщение WhatsApp. Чтобы отправить его, нужно нажать «Отправить» в WhatsApp.">Comanda va fi pregătită ca mesaj WhatsApp. Va trebui să apeși „Trimite” în WhatsApp pentru a o expedia.</p>
+    </form>
+  </div>
+</div>
+
+<script>
+// IMPORTANT: Înlocuiește cu numărul REAL al cofetăriei, cu prefixul țării,
+// fără +, spații sau liniuțe. Exemplu de format: 3736XXXXXXX.
+// Acesta este doar un exemplu, NU un număr real.
+const WHATSAPP_NUMBER = "373XXXXXXXXX";
+
+const products = [
+  {
+    id: 1, name: "Tort de ciocolată", ru: "Шоколадный торт",
+    description: "Ciocolată bogată și cremă fină.", ruDescription: "Насыщенный шоколад и нежный крем.",
+    price: 450,
+    image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=700&q=80"
+  },
+  {
+    id: 2, name: "Cheesecake", ru: "Чизкейк",
+    description: "Textură cremoasă și gust delicat.", ruDescription: "Нежная текстура и мягкий вкус.",
+    price: 280,
+    image: "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=700&q=80"
+  },
+  {
+    id: 3, name: "Macarons", ru: "Макаронс",
+    description: "Mici delicii în culori pastelate.", ruDescription: "Маленькие лакомства в пастельных оттенках.",
+    price: 120,
+    image: "https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=700&q=80"
+  },
+  {
+    id: 4, name: "Tartă cu fructe", ru: "Фруктовый тарт",
+    description: "Fructe proaspete și cremă fină.", ruDescription: "Свежие фрукты и нежный крем.",
+    price: 190,
+    image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=700&q=80"
+  },
+  {
+    id: 5, name: "Cupcakes", ru: "Капкейки",
+    description: "Pufoase, delicate și festive.", ruDescription: "Воздушные, нежные и праздничные.",
+    price: 75,
+    image: "https://images.unsplash.com/photo-1486427944299-d1955d23e34d?auto=format&fit=crop&w=700&q=80"
+  },
+  {
+    id: 6, name: "Brownie", ru: "Брауни",
+    description: "Desert intens pentru iubitorii de cacao.", ruDescription: "Яркий шоколадный вкус для любителей какао.",
+    price: 95,
+    image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=700&q=80"
+  },
+  {
+    id: 7, name: "Éclairs", ru: "Эклеры",
+    description: "Aluat delicat și cremă catifelată.", ruDescription: "Нежное тесто и бархатный крем.",
+    price: 65,
+    image: "https://images.unsplash.com/photo-1623334044303-241021148842?auto=format&fit=crop&w=700&q=80"
+  },
+  {
+    id: 8, name: "Red Velvet", ru: "Красный бархат",
+    description: "Blat fin și cremă de brânză.", ruDescription: "Нежный бисквит и сливочный сырный крем.",
+    price: 380,
+    image: "https://images.unsplash.com/photo-1616541823729-00fe0aacd32c?auto=format&fit=crop&w=700&q=80"
+  },
+  {
+    id: 9, name: "Tiramisu", ru: "Тирамису",
+    description: "Desert italian cu cafea și mascarpone.", ruDescription: "Итальянский десерт с кофе и маскарпоне.",
+    price: 160,
+    image: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=700&q=80"
+  },
+  {
+    id: 10, name: "Cookies", ru: "Печенье",
+    description: "Biscuiți fragezi cu ciocolată.", ruDescription: "Рассыпчатое печенье с шоколадом.",
+    price: 55,
+    image: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=700&q=80"
+  },
+  {
+    id: 11, name: "Pavlova", ru: "Павлова",
+    description: "Bezea crocantă și cremă aerată.", ruDescription: "Хрустящая меренга и воздушный крем.",
+    price: 210,
+    image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=700&q=80"
+  },
+  {
+    id: 12, name: "Profiteroles", ru: "Профитроли",
+    description: "Biluțe fine cu umplutură cremoasă.", ruDescription: "Нежные шарики с кремовой начинкой.",
+    price: 140,
+    image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=700&q=80"
+  }
+];
+
+let cart = {};
+let language = "ro";
+
+const money = value => `${value} MDL`;
+const getProduct = id => products.find(p => p.id === Number(id));
+
+function renderProducts() {
+  document.getElementById("products").innerHTML = products.map(p => `
+    <article class="product">
+      <img src="${p.image}" alt="${p.name}" loading="lazy">
+      <div class="product-info">
+        <h3>${language === "ro" ? p.name : p.ru}</h3>
+        <p>${language === "ro" ? p.description : p.ruDescription}</p>
+        <div class="product-bottom">
+          <span class="price">${money(p.price)}</span>
+          <button class="add-btn" onclick="addToCart(${p.id})">
+            ${language === "ro" ? "＋ În coș" : "＋ В корзину"}
+          </button>
+        </div>
+      </div>
+    </article>
+  `).join("");
+}
+
+function addToCart(id) {
+  cart[id] = (cart[id] || 0) + 1;
+  updateCart();
+}
+
+function changeQuantity(id, change) {
+  cart[id] = (cart[id] || 0) + change;
+  if (cart[id] <= 0) delete cart[id];
+  updateCart();
+}
+
+function cartTotal() {
+  return Object.entries(cart).reduce((sum, [id, qty]) => {
+    const product = getProduct(id);
+    return sum + (product ? product.price * qty : 0);
+  }, 0);
+}
+
+function updateCart() {
+  const count = Object.values(cart).reduce((sum, qty) => sum + qty, 0);
+  document.getElementById("cartCount").textContent = count;
+  document.getElementById("cartTotal").textContent = money(cartTotal());
+  document.getElementById("checkoutBtn").disabled = count === 0;
+
+  const entries = Object.entries(cart);
+  const container = document.getElementById("cartItems");
+
+  if (!entries.length) {
+    container.innerHTML = `<p class="cart-empty">${
+      language === "ro" ? "Coșul tău este gol. Alege un desert din catalog." :
+      "Корзина пуста. Выбери десерт из каталога."
+    }</p>`;
+    return;
+  }
+
+  container.innerHTML = entries.map(([id, qty]) => {
+    const p = getProduct(id);
+    if (!p) return "";
+    return `
+      <div class="cart-item">
+        <div>
+          <strong>${language === "ro" ? p.name : p.ru}</strong>
+          <small>${money(p.price)} / ${
+            language === "ro" ? "bucată" : "шт."
+          }</small>
+          <div class="quantity">
+            <button type="button" onclick="changeQuantity(${p.id}, -1)" aria-label="Decrease">−</button>
+            <span>${qty}</span>
+            <button type="button" onclick="changeQuantity(${p.id}, 1)" aria-label="Increase">＋</button>
+            <button type="button" class="remove" onclick="changeQuantity(${p.id}, -${qty})">${
+              language === "ro" ? "Șterge" : "Удалить"
+            }</button>
+          </div>
+        </div>
+        <strong>${money(p.price * qty)}</strong>
+      </div>`;
+  }).join("");
+}
+
+function openCart() {
+  updateCart();
+  document.getElementById("cartModal").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeCart() {
+  document.getElementById("cartModal").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+function toggleLanguage() {
+  language = language === "ro" ? "ru" : "ro";
+  document.documentElement.lang = language;
+  document.querySelectorAll("[data-ro][data-ru]").forEach(el => {
+    el.textContent = el.dataset[language];
+  });
+  document.getElementById("langBtn").textContent = language === "ro" ? "RU" : "RO";
+  document.getElementById("address").required =
+    document.getElementById("delivery").value === "Livrare";
+  renderProducts();
+  updateCart();
+}
+
+function updateDelivery() {
+  const isDelivery = document.getElementById("delivery").value === "Livrare";
+  document.getElementById("addressField").style.display = isDelivery ? "block" : "none";
+  document.getElementById("address").required = isDelivery;
+}
+
+document.getElementById("delivery").addEventListener("change", updateDelivery);
+
+document.getElementById("orderForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  if (Object.keys(cart).length === 0) {
+    alert(language === "ro" ? "Coșul este gol." : "Корзина пуста.");
+    return;
+  }
+
+  if (!/^\d{8,15}$/.test(WHATSAPP_NUMBER)) {
+    alert(language === "ro"
+      ? "Administratorul trebuie să configureze numărul WhatsApp real în cod înainte de a primi comenzi."
+      : "Администратору нужно указать настоящий номер WhatsApp в коде, прежде чем принимать заказы.");
+    return;
+  }
+
+  const form = new FormData(this);
+  const name = String(form.get("name") || "").trim();
+  const phone = String(form.get("phone") || "").trim();
+  const delivery = String(form.get("delivery") || "");
+  const address = String(form.get("address") || "").trim();
+  const comment = String(form.get("comment") || "").trim();
+
+  if (!name || !phone || (delivery === "Livrare" && !address)) {
+    alert(language === "ro" ? "Completează toate câmpurile obligatorii." : "Заполни все обязательные поля.");
+    return;
+  }
+
+  const lines = Object.entries(cart).map(([id, qty]) => {
+    const p = getProduct(id);
+    return `• ${language === "ro" ? p.name : p.ru} × ${qty} — ${money(p.price * qty)}`;
+  });
+
+  const message = [
+    language === "ro" ? "Bună! Doresc să plasez o comandă:" : "Здравствуйте! Хочу оформить заказ:",
+    "",
+    ...lines,
+    "",
+    `${language === "ro" ? "Total" : "Итого"}: ${money(cartTotal())}`,
+    `${language === "ro" ? "Nume" : "Имя"}: ${name}`,
+    `${language === "ro" ? "Telefon" : "Телефон"}: ${phone}`,
+    `${language === "ro" ? "Primire" : "Получение"}: ${delivery === "Livrare" ? (language === "ro" ? "Livrare" : "Доставка") : (language === "ro" ? "Ridicare personală" : "Самовывоз")}`,
+    ...(delivery === "Livrare" ? [`${language === "ro" ? "Adresă" : "Адрес"}: ${address}`] : []),
+    ...(comment ? [`${language === "ro" ? "Comentariu" : "Комментарий"}: ${comment}`] : [])
+  ].join("\n");
+
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(url, "_blank", "noopener,noreferrer");
+});
+
+document.getElementById("cartModal").addEventListener("click", function(event) {
+  if (event.target === this) closeCart();
+});
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") closeCart();
+});
+
+document.getElementById("year").textContent = new Date().getFullYear();
+document.getElementById("contactLink").href =
+  `https://wa.me/${WHATSAPP_NUMBER}`;
+renderProducts();
+updateCart();
+updateDelivery();
+</script>
+</body>
+</html>
